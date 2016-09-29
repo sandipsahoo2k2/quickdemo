@@ -1,180 +1,165 @@
 <!DOCTYPE html>
 <html>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-database.js"></script>
-
-<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<title>W3.CSS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/w3.css">
+<link rel="stylesheet" href="css/w3-theme-teal.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css"><style>
+.w3-sidenav a {padding:16px;font-weight:bold}
+</style>
 <body>
 
-<script>
-  // Set the configuration for your app
-  // TODO: Replace with your project's config object
-   // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyB_Rcg-PBIz4HazlNEWiBQiW4K7BV4mDPM",
-    authDomain: "quickdemo-b4cc9.firebaseapp.com",
-    databaseURL: "https://quickdemo-b4cc9.firebaseio.com",
-    storageBucket: "quickdemo-b4cc9.appspot.com",
-  };
+<nav class="w3-sidenav w3-collapse w3-white w3-animate-left w3-card-2" style="z-index:3;width:250px;" id="mySidenav">
+  <a href="#" class="w3-border-bottom w3-large">Quick Connect</a>
+  <a href="javascript:void(0)" onclick="w3_close()"
+  class="w3-text-teal w3-hide-large w3-closenav w3-large">Close <i class="fa fa-remove"></i></a>
+  <a href="#" class="w3-light-grey w3-medium">Home</a>
+  <a href="#">Typography</a>
+  <a href="#">Colors</a>
+  <a href="#">Utilities</a>
+</nav>
 
-  firebase.initializeApp(config);
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" id="myOverlay"></div>
 
-// Get a reference to the database service
-var database = firebase.database();
+<div class="w3-main" style="margin-left:250px;">
 
-var app = angular.module("quick_demo", []);
+<div id="myTop" class="w3-top w3-container w3-padding-16 w3-brown w3-large">
+  <i class="fa fa-bars w3-opennav w3-hide-large w3-xlarge w3-margin-left w3-margin-right" onclick="w3_open()"></i>
+  <span id="myIntro" class="w3-hide">Use JPCOnnect to Quick Connect</span>
+</div>
 
-app.controller("myCtrl", function($scope) {
+<header class="w3-container w3-theme w3-padding-64" style="padding-left:32px">
+<h1 class="w3-xxxlarge w3-padding-16"></h1>
+  <h1 class="w3-xxxlarge w3-padding-16">Need a better review framework ?</h1>
+  <h1 class="w3-xlarge w3-right-align">Point of you, jpmorgan-notifications..</h1>
+  <h1 class="w3-xlarge w3-right-align">un-user friendly, emails Ohh are not synced..</h1>
+  <h1 class="w3-xlarge w3-right-align"><a href="">Try JPConnect</h1></a>
+  <h1 class="w3-xxxlarge w3-padding-16"></h1>
+</header>
 
-  $scope.products = [];
+<div class="w3-container w3-padding-32" style="padding-left:32px">
 
-  var channelsRef = database.ref("/channels");
+<h2>Feedback Reviews are vital</h2>
 
-  channelsRef.orderByChild("channel").on("child_added", function(snapshot) {
-        console.log("The " + snapshot.key + " channel is " + snapshot.val().channel);
-        $scope.products.push(snapshot.val().channel);
-    });
+<p>For a better work place and healthy workplace</p>
 
-    $scope.addItem = function () {
-        $scope.errortext = "";
-        if (!$scope.addMe) {return;}
-        if ($scope.products.indexOf($scope.addMe) == -1) {
-            //$scope.products.push($scope.addMe);
-            $scope.createAChannel($scope.addMe);
-        } else {
-            $scope.errortext = "The channel is already in the list.";
-        }
-    }
+<ul class="w3-leftbar w3-theme-border" style="list-style:none">
+ <li>Companies time to time conduct surveys, collect feedbacks.</li>
+ <li>They use emails, sms and install kiosks.</li>
+</ul>
+<br>
+<img src="img_responsive.png" style="width:100%;margin:20px 0" alt="Responsive">
 
-    $scope.removeItem = function (x) {
-        $scope.errortext = "";
-        $scope.products.splice(x, 1);
-    }
+<hr>
+<h2>Do we get enough feedbacks ?</h2>
+<p>Do we get enough particpations, reads</p>
 
-$scope.createAChannel = function(channelName) {
-    var newKey = database.ref('channels').push().key;
-      database.ref('channels/' + newKey).set({channel:channelName});
-      return newKey;
-  }
+<hr>
+<h2>Easy to Use</h2>
+<div class="w3-container w3-sand w3-leftbar">
+<p><i>Make it as simple as possible, but not simpler.</i><br>
+Albert Einstein</p>
+</div>
 
-  $scope.createAPost = function(channelKey, message, title, itsAsurvey) {
+<h2>W3.CSS Web Site Templates</h2>
 
-      var data = {};
-      if(itsAsurvey)
-      {
-        data = {
-              type:"survey",
-              body: message,
-              title: title,
-              Yes: 0,
-              No: 0
-            };
-      }
-      else
-      {
-        data = {
-              type:"normal",
-              body: message,
-              title: title
-            };
-      }
+<p>We have created some responsive W3CSS templates for you to use.</p>
+<p>You are free to modify, save, share, use or do whatever you want with them:</p>
 
-    var newSurveyKey = database.ref('channels/' + channelKey + '/messages').push().key;
-      database.ref('messages/' + newPostKey).set(data);
-  }
-
-});
-
-
-</script>
-
-<div ng-app="quick_demo" ng-cloak ng-controller="myCtrl" class="">
-
-  <div class="w3-row">
-    <div class="w3-col m4 l3 w3-margin">
-      <div class="w3-card-2">
-          <header class="w3-container w3-light-grey w3-padding-16">
-            <h3>JPConnect Channels</h3>
-          </header>
-          <div class="w3-container w3-light-grey w3-padding-16">
-            <div class="w3-row w3-margin-top">
-              <div class="w3-col s10">
-                <input placeholder="Add new channels here" ng-model="addMe" class="w3-input w3-border w3-padding">
-              </div>
-              <div class="w3-col s2">
-                <button ng-click="addItem()" class="w3-btn w3-padding w3-green">Add</button>
-              </div>
-            </div>
-            <p class="w3-padding-left w3-text-red">{{errortext}}</p>
-          </div>
-          <ul class="w3-ul">
-            <li ng-repeat="x in products" class="w3-padding-16">{{x}}<span ng-click="removeItem($index)" style="cursor:pointer;" class="w3-right w3-margin-right">×</span></li>
-          </ul>
-        </div>
-    </div>
-    <div class="w3-col m7 l8 w3-margin">
-      <div class="w3-row">
-          <div class="w3-card-2">
-
-            <header class="w3-container w3-light-grey w3-padding-16">
-              <h3>Publish message on {{selected_channel}}</h3>
-            </header>
-
-              <form class="w3-container">
-
-                <input class="w3-input" type="text" required>
-                <label class="w3-label w3-validate">Message title</label>
-
-                <textarea class="w3-input" type="text" rows="4" required></textarea>
-                <label class="w3-label w3-validate">Message body</label>
-
-              </form>
-
-              <div class="w3-container w3-light-grey w3-padding-16">
-                  <div class="w3-row w3-margin-top">
-                    <div class="w3-col s10">
-                      <input class="w3-check" type="checkbox" checked="checked">
-                      <label class="w3-validate">It is a survey</label>
-                    </div>
-                    <div class="w3-col s2">
-                      <button class="w3-btn w3-green">PUBLISH</button>
-                    </div>
-                  </div>
-                </div>
-
-          </div>
-        </div>
-
-        <div class="w3-row">
-          <div class="w3-card-2">
-
-            <div class="w3-panel w3-pale-yellow w3-leftbar w3-border-yellow">
-            <p>London is the most populous city in the United Kingdom,
-            with a metropolitan area of over 9 million inhabitants.</p>
-            <div class="w3-row">
-              <div class="w3-col s5">
-                <h1>Yes&nbsp;<span class="w3-tag w3-green">66</span></h1>
-              </div>
-              <div class="w3-col s5">
-                <h1>No&nbsp;<span class="w3-tag w3-red">41</span></h1>
-              </div>
-            </div>
-            </div>
-
-            <div class="w3-panel w3-pale-green w3-leftbar w3-border-green">
-            <p>London is the most populous city in the United Kingdom,
-            with a metropolitan area of over 9 million inhabitants.</p>
-            </div>
-
-          </div>
-        </div>
-
-    </div>
+<div class="w3-container w3-padding-16 w3-card-2" style="background-color:#eee">
+<h3 class="w3-center">Blog Template</h3>
+<div class="w3-content" style="max-width:800px">
+<img src="img_temp_blog.jpg" style="width:98%;margin:20px 0" alt="Blog Template"><br>
+<div class="w3-row">
+  <div class="w3-col m6">
+    <a href="tryw3css_templates_blog.htm" target="_blank" class="w3-btn w3-padding-12 w3-dark-grey" style="width:98.5%">Demo</a>
   </div>
+  <div class="w3-col m6">
+    <a href="w3css_templates.asp" class="w3-btn w3-padding-12 w3-dark-grey" style="width:98.5%">More Templates »</a>
+  </div>
+</div>
+</div>
+</div>
+<br>
+
+<h2 class="w3-section w3-text-teal">Colors</h2>
+<p>W3.CSS uses color classes.</p>
+<p>The color classes are inspired by colors used in marketing, road signs, and sticky notes.</p>
+<div class="w3-container w3-red"><p>w3-red</p></div><br>
+<div class="w3-container w3-pink"><p>w3-pink</p></div><br>
+<div class="w3-container w3-purple"><p>w3-purple</p></div><br>
+<div class="w3-container w3-deep-purple"><p>w3-deep-purple</p></div><br>
+<div class="w3-container w3-indigo"><p>w3-indigo</p></div><br>
+<div class="w3-container w3-blue"><p>w3-blue</p></div><br>
+<div class="w3-container w3-light-blue"><p>w3-light-blue</p></div><br>
+<div class="w3-container w3-cyan"><p>w3-cyan</p></div><br>
+<div class="w3-container w3-aqua"><p>w3-aqua</p></div><br>
+<div class="w3-container w3-teal"><p>w3-teal</p></div><br>
+<div class="w3-container w3-green"><p>w3-green</p></div><br>
+<div class="w3-container w3-light-green"><p>w3-light-green</p></div><br>
+<div class="w3-container w3-lime"><p>w3-lime</p></div><br>
+<div class="w3-container w3-sand"><p>w3-sand</p></div><br>
+<div class="w3-container w3-khaki"><p>w3-khaki</p></div><br>
+<div class="w3-container w3-yellow"><p>w3-yellow</p></div><br>
+<div class="w3-container w3-amber"><p>w3-amber</p></div><br>
+<div class="w3-container w3-orange"><p>w3-orange</p></div><br>
+<div class="w3-container w3-deep-orange"><p>w3-deep-orange</p></div><br>
+<div class="w3-container w3-blue-grey"><p>w3-blue-grey</p></div><br>
+<div class="w3-container w3-brown"><p>w3-brown</p></div><br>
+<div class="w3-container w3-light-grey"><p>w3-light-grey</p></div><br>
+<div class="w3-container w3-grey"><p>w3-grey</p></div><br>
+<div class="w3-container w3-dark-grey"><p>w3-dark-grey</p></div><br>
+<div class="w3-container w3-black"><p>w3-black</p></div><br>
+<div class="w3-container w3-pale-red"><p>w3-pale-red</p></div><br>
+<div class="w3-container w3-pale-yellow"><p>w3-pale-yellow</p></div><br>
+<div class="w3-container w3-pale-green"><p>w3-pale-green</p></div><br>
+<div class="w3-container w3-pale-blue"><p>w3-pale-blue</p></div>
 
 </div>
 
+<footer class="w3-container w3-theme w3-padding-32" style="padding-left:32px">
+  <h5>Footer</h5>
+  <p>Footer information goes here</p>
+</footer>
+     
+</div>
+
+<script>
+// Open and close the sidenav on medium and small screens
+function w3_open() {
+    document.getElementById("mySidenav").style.display = "block";
+    document.getElementById("myOverlay").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidenav").style.display = "none";
+    document.getElementById("myOverlay").style.display = "none";
+}
+
+// Change style of top container on scroll
+window.onscroll = function() {myFunction()};
+function myFunction() {
+    if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+        document.getElementById("myTop").classList.add("w3-card-4");
+        document.getElementById("myIntro").classList.add("w3-show-inline-block");
+    } else {
+        document.getElementById("myIntro").classList.remove("w3-show-inline-block");
+        document.getElementById("myTop").classList.remove("w3-card-4");
+    }
+}
+
+// Accordions
+function myAccordion(id) {
+    var x = document.getElementById(id);
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+        x.previousElementSibling.className += " w3-theme";
+    } else {
+        x.className = x.className.replace("w3-show", "");
+        x.previousElementSibling.className =
+        x.previousElementSibling.className.replace(" w3-theme", "");
+    }
+}
+</script>
+     
 </body>
 </html>
