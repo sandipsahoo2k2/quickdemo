@@ -19,81 +19,159 @@
     storageBucket: "quickdemo-b4cc9.appspot.com",
   };
 
-  firebase.initializeApp(config);
-
+firebase.initializeApp(config);
 // Get a reference to the database service
-var database = firebase.database();
+  var database = firebase.database();
+  var app = angular.module("quick_demo", []);
+  var  messageURI = null;
+  var messageRef = null;
 
-var app = angular.module("quick_demo", []);
+app.controller("channelCtrl", function($scope, $rootScope) {
 
-app.controller("myCtrl", function($scope) {
-
-  $scope.products = [];
-
+  $scope.channels = [];
+  $scope.channel_keys = [];
   var channelsRef = database.ref("/channels");
 
   channelsRef.orderByChild("channel").on("child_added", function(snapshot) {
         console.log("The " + snapshot.key + " channel is " + snapshot.val().channel);
-        $scope.products.push(snapshot.val().channel);
+        $scope.channels.push(snapshot.val().channel);
+        $scope.channel_keys.push(snapshot.key);
     });
 
-    $scope.addItem = function () {
+    $scope.addChannel = function(){
         $scope.errortext = "";
         if (!$scope.addMe) {return;}
-        if ($scope.products.indexOf($scope.addMe) == -1) {
-            //$scope.products.push($scope.addMe);
+        if ($scope.channels.indexOf($scope.addMe) == -1) {
             $scope.createAChannel($scope.addMe);
+            alert( "The channel '" + $scope.addMe + "' Created");
         } else {
             $scope.errortext = "The channel is already in the list.";
         }
     }
 
-    $scope.removeItem = function (x) {
-        $scope.errortext = "";
-        $scope.products.splice(x, 1);
-    }
-
-$scope.createAChannel = function(channelName) {
-    var newKey = database.ref('channels').push().key;
+    $scope.createAChannel = function(channelName) {
+      var newKey = database.ref('channels').push().key;
       database.ref('channels/' + newKey).set({channel:channelName});
-      return newKey;
+    return newKey;
   }
 
-  $scope.createAPost = function(channelKey, message, title, itsAsurvey) {
+  $scope.selectChannel = function(x) {
+          $rootScope.selected_channel = x;
+          var index = $scope.channels.indexOf(x);
+          $scope.selected_channel_key = $scope.channel_keys[index];
+          messageURI = "channels/" + $scope.selected_channel_key + "/messages";
+          messageRef = database.ref(messageURI);
+          //Show clicked item on "Publish message on" 
+          $rootScope.messageArray = [];
+          $rootScope.message_keys = [];
 
-      var data = {};
-      if(itsAsurvey)
-      {
-        data = {
-              type:"survey",
-              body: message,
-              title: title,
-              Yes: 0,
-              No: 0
-            };
+          messageRef.orderByChild("message").on("child_added", function(snapshot) {
+            console.log("The " + snapshot.key + " publishMessage is " + snapshot.val().message);
+            $rootScope.messageArray.push(snapshot.val().message);
+            $rootScope.message_keys.push(snapshot.key);
+          });
+
+          messageRef.orderByChild("message").on("child_changed", function(childSnapshot, prevChildKey) {
+            var index = $rootScope.message_keys.indexOf(childSnapshot.key);
+            $rootScope.messageArray[index] = childSnapshot.val().message;
+            $rootScope.$apply("messageArray");
+          });
+
+         $scope.selectedRow = index; // This is for changing color on select a channel
+    }
+   
+      $scope.removeChannel = function (x) {
+        $scope.errortext = "";
+        var index = $scope.channels.indexOf(x)
+        var removeKey = $scope.channel_keys[index];
+        database.ref('channels/' + removeKey).set(null);
+        $scope.channels.splice(index, 1);
       }
-      else
-      {
-        data = {
-              type:"normal",
-              body: message,
-              title: title
-            };
+
+  });
+
+app.controller("messageCtrl", function($scope, $rootScope, $http) {
+
+      $scope.publishMessage = function() {
+
+        if(!$rootScope.selected_channel)
+        {
+          alert('Please select a channel');
+          return;
+        }
+
+        $scope.errortext = "";
+        if (!$scope.msg) {return;}
+        $scope.addMessageDetails($scope.msg);
+        $scope.httpPostData($rootScope.selected_channel, $scope.msg);
       }
 
-    var newSurveyKey = database.ref('channels/' + channelKey + '/messages').push().key;
-      database.ref('messages/' + newPostKey).set(data);
-  }
+      $scope.httpPostData = function(topicName, msgData)
+      {
 
-});
+        var gcmDataPkt = {
+          to: '/topics/' + topicName,
+          data:msgData
+        };
 
+        $http({
+        method : "POST",
+        data: gcmDataPkt,
+        headers: {
+           'Content-Type' : 'application/json',
+           'Authorization' : 'key=AIzaSyDhsWbiJ3RaSq5vnjwI7TahoRMD-jFDOFI'
+         },
+        url : "https://android.googleapis.com/gcm/send",
+          }).then(function mySucces(response) {
+              console.log("Message published to GCM Server");
+          }, function myError(response) {
+              alert("Could not publish message !\n" + response);
+          });
+      }
 
+      $scope.addMessageDetails = function(msgf) {
+        if(msgf.survey === true)
+        {
+            msgf.yesCount = 0;
+            msgf.noCount = 0;
+        }
+        else
+        {
+            msgf.survey = false;
+        }
+        var newMsgKey = messageRef.push().key;
+        database.ref( messageURI + '/' + newMsgKey).set({message:msgf});
+        return newMsgKey;
+      }
+
+      /*$scope.addYesCount = function(y){
+            var index = $scope.messageArray.indexOf(y);
+            y.yCnt = $scope.messageArray[index].yesCount;
+            y.yCnt = y.yCnt + 1;
+           // alert(y.yesCnt);
+            var messageKeyIndex = $scope.message_keys[index];
+            database.ref( messageURI + '/' + messageKeyIndex + '/message').update({yesCount:y.yCnt});
+          }
+       $scope.addNoCount = function(n){
+            var index = $scope.messageArray.indexOf(n);
+            n.nCnt = $scope.messageArray[index].noCount;
+            n.nCnt = n.nCnt + 1;
+            var messageKeyIndex = $scope.message_keys[index];
+            database.ref( messageURI + '/' + messageKeyIndex + '/message').update({noCount:n.nCnt});
+          }*/
+  });
 </script>
 
-<div ng-app="quick_demo" ng-cloak ng-controller="myCtrl" class="">
+<style type="text/css">
+.selected {
+  background-color: #ABEBC6; 
+}
+</style>
+
+<div ng-app="quick_demo" ng-cloak class="">
 
   <div class="w3-row">
-    <div class="w3-col m4 l3 w3-margin">
+    <div class="w3-col m4 l3 w3-margin" ng-controller="channelCtrl">
       <div class="w3-card-2">
           <header class="w3-container w3-light-grey w3-padding-16">
             <h3>JPConnect Channels</h3>
@@ -103,43 +181,43 @@ $scope.createAChannel = function(channelName) {
               <div class="w3-col s10">
                 <input placeholder="Add new channels here" ng-model="addMe" class="w3-input w3-border w3-padding">
               </div>
-              <div class="w3-col s2">
-                <button ng-click="addItem()" class="w3-btn w3-padding w3-green">Add</button>
+              <div class="w3-col s2" ng-style="{background:'red'}">
+                <button ng-click="addChannel()" class="w3-btn w3-padding w3-green">Add</button>
               </div>
             </div>
             <p class="w3-padding-left w3-text-red">{{errortext}}</p>
           </div>
-          <ul class="w3-ul">
-            <li ng-repeat="x in products" class="w3-padding-16">{{x}}<span ng-click="removeItem($index)" style="cursor:pointer;" class="w3-right w3-margin-right">×</span></li>
+
+          <ul class="w3-ul" >
+          <li ng-repeat="x in channels | filter:addMe" ng-click="selectChannel(x)" style="cursor:pointer;" class="w3-padding-16" ng-class="{'selected': $index == selectedRow }">{{x}}<span ng-click="removeChannel(x)" style="cursor:pointer;" class="w3-right w3-margin-right">X</span></li>
           </ul>
+
         </div>
     </div>
-    <div class="w3-col m7 l8 w3-margin">
+    <div class="w3-col m7 l8 w3-margin" ng-controller="messageCtrl">
       <div class="w3-row">
           <div class="w3-card-2">
 
             <header class="w3-container w3-light-grey w3-padding-16">
-              <h3>Publish message on {{selected_channel}}</h3>
+              <h3>Publish message on '{{selected_channel}}' channel</h3>
             </header>
 
               <form class="w3-container">
-
-                <input class="w3-input" type="text" required>
+                <input class="w3-input" type="text" ng-model="msg.title" required>
                 <label class="w3-label w3-validate">Message title</label>
 
-                <textarea class="w3-input" type="text" rows="4" required></textarea>
+                <textarea class="w3-input" type="text" ng-model="msg.body" rows="4" required></textarea>
                 <label class="w3-label w3-validate">Message body</label>
-
               </form>
 
               <div class="w3-container w3-light-grey w3-padding-16">
                   <div class="w3-row w3-margin-top">
                     <div class="w3-col s10">
-                      <input class="w3-check" type="checkbox" checked="checked">
+                      <input class="w3-check" type="checkbox" ng-model="msg.survey" checked="checked" >
                       <label class="w3-validate">It is a survey</label>
                     </div>
                     <div class="w3-col s2">
-                      <button class="w3-btn w3-green">PUBLISH</button>
+                      <button ng-click="publishMessage()" class="w3-btn w3-green">PUBLISH</button>
                     </div>
                   </div>
                 </div>
@@ -149,23 +227,39 @@ $scope.createAChannel = function(channelName) {
 
         <div class="w3-row">
           <div class="w3-card-2">
+            <div ng-repeat="m in messageArray.slice().reverse()" class="w3-padding-4">
+                <div ng-if="m.survey==true" class="w3-card-4 w3-leftbar w3-border-yellow">
+                    <header class="w3-container w3-pale-yellow">
+                      <h4>{{m.title}}</h4>
+                    </header>
 
-            <div class="w3-panel w3-pale-yellow w3-leftbar w3-border-yellow">
-            <p>London is the most populous city in the United Kingdom,
-            with a metropolitan area of over 9 million inhabitants.</p>
-            <div class="w3-row">
-              <div class="w3-col s5">
-                <h1>Yes&nbsp;<span class="w3-tag w3-green">66</span></h1>
-              </div>
-              <div class="w3-col s5">
-                <h1>No&nbsp;<span class="w3-tag w3-red">41</span></h1>
-              </div>
-            </div>
-            </div>
+                    <div class="w3-container">
+                      <p>{{m.body}}</p>
+                    </div>
+                    <footer class="w3-container">
+                      <div class="w3-row">
+                        <div class="w3-col s8">&nbsp;</div>
+                        <div class="w3-col s2">
+                          Yes&nbsp;<span class="w3-tag w3-btn w3-green" ng-click="addYesCount(m)" >{{m.yesCount}}
+                        </div>
+                        <div class="w3-col s2">
+                          No&nbsp;<span class="w3-tag w3-btn w3-red" ng-click="addNoCount(m)" >{{m.noCount}}
+                        </div>
+                      </div>
+                    </footer>
+                </div>
+                <div ng-if="m.survey==false" class="w3-card-4 w3-leftbar w3-border-green">
+                    <header class="w3-container w3-pale-green">
+                      <h4>{{m.title}}</h4>
+                    </header>
 
-            <div class="w3-panel w3-pale-green w3-leftbar w3-border-green">
-            <p>London is the most populous city in the United Kingdom,
-            with a metropolitan area of over 9 million inhabitants.</p>
+                    <div class="w3-container">
+                      <p>{{m.body}}</p>
+                    </div>
+                    <footer class="w3-container w3-blue">
+                    </footer>
+                </div>
+
             </div>
 
           </div>
@@ -178,3 +272,4 @@ $scope.createAChannel = function(channelName) {
 
 </body>
 </html>
+
