@@ -4,6 +4,7 @@
 <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-database.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 
 <link rel="stylesheet" href="css/w3.css">
 <body>
@@ -55,6 +56,10 @@ app.controller("channelCtrl", function($scope, $rootScope) {
     return newKey;
   }
 
+  $scope.selectLiIndex = function(index) {
+      $scope.selectedRow = index;
+  }
+
   $scope.selectChannel = function(x) {
           $rootScope.selected_channel = x;
           var index = $scope.channels.indexOf(x);
@@ -76,8 +81,6 @@ app.controller("channelCtrl", function($scope, $rootScope) {
             $rootScope.messageArray[index] = childSnapshot.val().message;
             $rootScope.$apply("messageArray");
           });
-
-         $scope.selectedRow = index; // This is for changing color on select a channel
     }
    
       $scope.removeChannel = function (x) {
@@ -189,8 +192,8 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
             <p class="w3-padding-left w3-text-red">{{errortext}}</p>
           </div>
 
-          <ul class="w3-ul" >
-          <li ng-repeat="x in channels | filter:addMe" ng-click="selectChannel(x)" style="cursor:pointer;" class="w3-padding-16" ng-class="{'selected': $index == selectedRow }">{{x}}<span ng-click="removeChannel(x)" style="cursor:pointer;" class="w3-right w3-margin-right">X</span></li>
+          <ul class="w3-ul">
+          <li ng-repeat="x in channels | filter:addMe" ng-click="selectChannel(x);selectLiIndex($index);" style="cursor:pointer;" class="w3-padding-16" ng-class="{'selected': $index == selectedRow }">{{x}}<span ng-click="removeChannel(x)" style="cursor:pointer;" class="w3-right w3-margin-right">X</span></li>
           </ul>
 
         </div>
@@ -225,18 +228,28 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
 
           </div>
         </div>
-
+        <div class="w3-row w3-grey w3-margin-top w3-margin-bottom">
+        <div class="w3-col s5">
+              <span class="w3-tag w3-round s6 w3-brown w3-border w3-border-white" ng-init="fileterBySurvey = undefined;" ng-click="fileterBySurvey = undefined"><i class="fa fa-filter" aria-hidden="true"></i>
+                      Filter messages
+              </span>
+          </div>
+          <div class="w3-col s3">
+            <span class="w3-tag w3-round w3-green w3-border w3-border-white w3-right" ng-click="fileterBySurvey = true">
+            <i class="fa fa-filter" aria-hidden="true"></i>
+                      Survey
+            </span>
+          </div>
+          <div class="w3-col s4">
+              <span class="w3-tag w3-round s6 w3-yellow w3-border w3-border-white w3-left" ng-click="fileterBySurvey = false">
+                <i class="fa fa-filter" aria-hidden="true"></i>
+                      Normal
+              </span>
+          </div>
+        </div>
         <div class="w3-row">
           <div class="w3-card-2">
-            <div class="w3-tag w3-round w3-green" style="padding:3px;">
-              <div class="w3-tag w3-round w3-green w3-border w3-border-white">
-                Normal messages
-              </div>
-              <div class="w3-tag w3-round w3-green w3-border w3-border-white">
-                Survey messages
-              </div>
-            </div>
-            <div ng-repeat="m in messageArray.slice().reverse()" class="w3-padding-4">
+            <div ng-repeat="m in messageArray.slice().reverse() | filter:{survey : fileterBySurvey}" class="w3-padding-4">
                 <div ng-if="m.survey==true" class="w3-card-4 w3-leftbar w3-border-green">
                     <header class="w3-container w3-pale-green">
                       <h4>{{m.title}}</h4>
@@ -249,10 +262,10 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
                       <div class="w3-row">
                         <div class="w3-col s8">&nbsp;</div>
                         <div class="w3-col s2">
-                          Yes&nbsp;<span class="w3-tag w3-btn w3-green" ng-click="addYesCount(m)" >{{m.yesCount}}
+                          Yes&nbsp;<span class="w3-tag w3-btn w3-green">{{m.yesCount}}
                         </div>
                         <div class="w3-col s2">
-                          No&nbsp;<span class="w3-tag w3-btn w3-red" ng-click="addNoCount(m)" >{{m.noCount}}
+                          No&nbsp;<span class="w3-tag w3-btn w3-red">{{m.noCount}}
                         </div>
                       </div>
                     </footer>
