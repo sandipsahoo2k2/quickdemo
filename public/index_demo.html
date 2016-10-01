@@ -80,7 +80,10 @@ app.controller("channelCtrl", function($scope, $rootScope) {
 
           messageRef.orderByChild("message").on("child_changed", function(childSnapshot, prevChildKey) {
             var index = $rootScope.message_keys.indexOf(childSnapshot.key);
-            $rootScope.messageArray[index] = childSnapshot.val().message;
+            var changedObj = childSnapshot.val().message;
+            var oldObj = $rootScope.messageArray[index];
+            changedObj.message_uri = oldObj.message_uri;
+            $rootScope.messageArray[index] = changedObj;
             $rootScope.$apply("messageArray");
           });
     }
