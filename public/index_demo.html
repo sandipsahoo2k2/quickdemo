@@ -71,8 +71,10 @@ app.controller("channelCtrl", function($scope, $rootScope) {
           $rootScope.message_keys = [];
 
           messageRef.orderByChild("message").on("child_added", function(snapshot) {
-            console.log("The " + snapshot.key + " publishMessage is " + snapshot.val().message);
-            $rootScope.messageArray.push(snapshot.val().message);
+            var msgObj = snapshot.val().message;
+            msgObj.message_uri = messageURI + "/" + snapshot.key + '/message';
+            console.log("The " + snapshot.key + " publishMessage is " + msgObj);
+            $rootScope.messageArray.push(msgObj);
             $rootScope.message_keys.push(snapshot.key);
           });
 
@@ -105,8 +107,8 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
 
         $scope.errortext = "";
         if (!msg) {return;}
-        var msgURI = $scope.addMessageDetails(msg);
-        $scope.msg.message_uri = messageURI + "/" + msgURI + '/message';
+        var msgKey = $scope.addMessageDetails(msg);
+        $scope.msg.message_uri = messageURI + "/" + msgKey + '/message';
         $scope.httpPostData($rootScope.selected_channel, msg);
       }
 
