@@ -102,7 +102,8 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
 
         $scope.errortext = "";
         if (!$scope.msg) {return;}
-        $scope.addMessageDetails($scope.msg);
+        var msgURI = $scope.addMessageDetails($scope.msg);
+        $scope.msg.message_uri = messageURI + "/" + msgURI + '/message';
         $scope.httpPostData($rootScope.selected_channel, $scope.msg);
       }
 
@@ -227,9 +228,17 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
 
         <div class="w3-row">
           <div class="w3-card-2">
+            <div class="w3-tag w3-round w3-green" style="padding:3px;">
+              <div class="w3-tag w3-round w3-green w3-border w3-border-white">
+                Normal messages
+              </div>
+              <div class="w3-tag w3-round w3-green w3-border w3-border-white">
+                Survey messages
+              </div>
+            </div>
             <div ng-repeat="m in messageArray.slice().reverse()" class="w3-padding-4">
-                <div ng-if="m.survey==true" class="w3-card-4 w3-leftbar w3-border-yellow">
-                    <header class="w3-container w3-pale-yellow">
+                <div ng-if="m.survey==true" class="w3-card-4 w3-leftbar w3-border-green">
+                    <header class="w3-container w3-pale-green">
                       <h4>{{m.title}}</h4>
                     </header>
 
@@ -248,8 +257,8 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
                       </div>
                     </footer>
                 </div>
-                <div ng-if="m.survey==false" class="w3-card-4 w3-leftbar w3-border-green">
-                    <header class="w3-container w3-pale-green">
+                <div ng-if="m.survey==false" class="w3-card-4 w3-leftbar w3-border-yellow">
+                    <header class="w3-container w3-pale-yellow">
                       <h4>{{m.title}}</h4>
                     </header>
 
