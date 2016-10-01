@@ -95,7 +95,7 @@ app.controller("channelCtrl", function($scope, $rootScope) {
 
 app.controller("messageCtrl", function($scope, $rootScope, $http) {
 
-      $scope.publishMessage = function() {
+      $scope.publishMessage = function(msg) {
 
         if(!$rootScope.selected_channel)
         {
@@ -104,10 +104,10 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
         }
 
         $scope.errortext = "";
-        if (!$scope.msg) {return;}
-        var msgURI = $scope.addMessageDetails($scope.msg);
+        if (!msg) {return;}
+        var msgURI = $scope.addMessageDetails(msg);
         $scope.msg.message_uri = messageURI + "/" + msgURI + '/message';
-        $scope.httpPostData($rootScope.selected_channel, $scope.msg);
+        $scope.httpPostData($rootScope.selected_channel, msg);
       }
 
       $scope.httpPostData = function(topicName, msgData)
@@ -127,7 +127,7 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
          },
         url : "https://android.googleapis.com/gcm/send",
           }).then(function mySucces(response) {
-              console.log("Message published to GCM Server");
+              alert("Message published to Server");
           }, function myError(response) {
               alert("Could not publish message !\n" + response);
           });
@@ -221,7 +221,7 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
                       <label class="w3-validate">It is a survey</label>
                     </div>
                     <div class="w3-col s2">
-                      <button ng-click="publishMessage()" class="w3-btn w3-green">PUBLISH</button>
+                      <button ng-click="publishMessage(msg)" class="w3-btn w3-green">PUBLISH</button>
                     </div>
                   </div>
                 </div>
@@ -260,7 +260,13 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
                     </div>
                     <footer class="w3-container">
                       <div class="w3-row">
-                        <div class="w3-col s8">&nbsp;</div>
+                        <div class="w3-col s8 w3-left">
+                        <div class="w3-tag w3-round w3-brown" style="padding:3px">
+                        <div class="w3-tag w3-round w3-brown w3-border w3-border-white w3-btn w3-tiny" ng-click="httpPostData(selected_channel, m);">
+                          Publish again
+                        </div>
+                      </div>
+                        </div>
                         <div class="w3-col s2">
                           Yes&nbsp;<span class="w3-tag w3-btn w3-green">{{m.yesCount}}
                         </div>
@@ -278,7 +284,12 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
                     <div class="w3-container">
                       <p>{{m.body}}</p>
                     </div>
-                    <footer class="w3-container w3-blue">
+                    <footer class="w3-container">
+                      <div class="w3-tag w3-round w3-brown" style="padding:3px">
+                        <div class="w3-tag w3-round w3-brown w3-border w3-border-white w3-btn w3-tiny" ng-click="httpPostData(selected_channel, m);">
+                          Publish again
+                        </div>
+                      </div>
                     </footer>
                 </div>
 
