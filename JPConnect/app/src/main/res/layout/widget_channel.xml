@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:paddingLeft="8dp"
+    android:paddingRight="16dp"
+    android:layout_height="60dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/id_channel_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:text="Channel Title"
+        android:maxLength="40"
+        android:textSize="18dp" />
+
+        <TextView
+            android:layout_below="@+id/id_channel_title"
+            android:textSize="10dp"
+            android:text="No messages"
+            android:textColor="@android:color/holo_blue_dark"
+            android:id="@+id/id_time_stamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <Switch
+        android:id="@+id/id_switch"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="On"
+        android:textOff="Off"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        />
+
+    <!--
+    <TextView
+        android:id="@+id/id_channel_counter"
+        android:layout_alignParentRight="true"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rectangle"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+        -->
+
+</RelativeLayout>
