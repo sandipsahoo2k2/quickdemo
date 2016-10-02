@@ -1,13 +1,13 @@
 package com.zoogaru.android.jpconnect;
 
-import android.app.Application;
+import android.support.multidex.MultiDex;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by sandeep on 9/24/16.
  */
-public class MyApplication extends Application {
+public class MyApplication extends android.support.multidex.MultiDexApplication {
 
     public static final String TAG = MyApplication.class
             .getSimpleName();
@@ -20,8 +20,8 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        //FirebaseApp.initializeApp(this, FirebaseOptions.fromResource(this));
         t = new GlobalUtil(this);
+        MultiDex.install(this);
     }
 
     public static synchronized MyApplication getInstance() {

@@ -4,12 +4,18 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
 
+    dexOptions{
+        incremental true
+        javaMaxHeapSize "4g"
+    }
+
     defaultConfig {
         applicationId "com.zoogaru.android.jpconnect"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -31,6 +37,7 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:9.4.0'
     compile 'com.google.firebase:firebase-database:9.4.0'
     compile 'com.google.firebase:firebase-auth:9.4.0'
+    compile 'com.android.support:multidex:1.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -14,13 +14,13 @@ public class Message implements Serializable {
     String createdAt;
 
     @PropertyName("title")
-    String title;
+    public String title;
 
     @PropertyName("body")
-    String body;
+    public String body;
 
     @PropertyName("survey")
-    boolean survey;
+    public boolean survey;
 
     @PropertyName("yesCount")
     public int yesCount;

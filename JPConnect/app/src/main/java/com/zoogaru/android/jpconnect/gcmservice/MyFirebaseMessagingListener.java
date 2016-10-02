@@ -148,8 +148,15 @@ public class MyFirebaseMessagingListener extends FirebaseMessagingService {
                 .setContentIntent(notificationIntent).setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(message));
 
-        notificationBuilder.addAction(R.drawable.ic_stat_content_clear, QKConstants.ACTION_DISMISS, piDismiss);
-        notificationBuilder.addAction(R.drawable.ic_stat_action_done, QKConstants.ACTION_OK, piYes);
+        if(isSurvey)
+        {
+            notificationBuilder.addAction(R.drawable.ic_stat_content_clear, QKConstants.ACTION_NO, piDismiss);
+            notificationBuilder.addAction(R.drawable.ic_stat_action_done, QKConstants.ACTION_YES, piYes);
+        }
+        else {
+            notificationBuilder.addAction(R.drawable.ic_stat_content_clear, QKConstants.ACTION_DISMISS, piDismiss);
+            //notificationBuilder.addAction(R.drawable.ic_stat_action_done, QKConstants.ACTION_OK, piYes);
+        }
         Notification n = notificationBuilder.build();
         n.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
 

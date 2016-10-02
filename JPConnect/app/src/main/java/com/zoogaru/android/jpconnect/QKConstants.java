@@ -15,6 +15,9 @@ public final class QKConstants {
     public static String ACTION_DISMISS = "DISMISS";
     public static String ACTION_OK = "OK";
 
+    public static String ACTION_YES = "YES";
+    public static String ACTION_NO = "NO";
+
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
