@@ -180,17 +180,17 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
 <div ng-app="quick_demo" ng-cloak class="">
 
   <div class="w3-row">
-    <div class="w3-col m4 l3 w3-margin" ng-controller="channelCtrl">
-      <div class="w3-card-2">
+    <div class="w3-col l4" ng-controller="channelCtrl">
+      <div class="w3-card-2  w3-margin">
           <header class="w3-container w3-light-grey w3-padding-16">
             <h3>JPConnect Channels</h3>
           </header>
           <div class="w3-container w3-light-grey w3-padding-16">
             <div class="w3-row w3-margin-top">
-              <div class="w3-col s10">
+              <div class="w3-col m10 l10">
                 <input placeholder="Add new channels here" ng-model="addMe" class="w3-input w3-border w3-padding">
               </div>
-              <div class="w3-col s2" ng-style="{background:'red'}">
+              <div class="w3-col m2 l2">
                 <button ng-click="addChannel()" class="w3-btn w3-padding w3-green">Add</button>
               </div>
             </div>
@@ -200,59 +200,58 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
           <ul class="w3-ul">
           <li ng-repeat="x in channels | filter:addMe" ng-click="selectChannel(x);selectLiIndex($index);" style="cursor:pointer;" class="w3-padding-16" ng-class="{'selected': $index == selectedRow }">{{x}}<span ng-click="removeChannel(x)" style="cursor:pointer;" class="w3-right w3-margin-right">X</span></li>
           </ul>
-
         </div>
     </div>
-    <div class="w3-col m7 l8 w3-margin" ng-controller="messageCtrl">
-      <div class="w3-row">
-          <div class="w3-card-2">
 
-            <header class="w3-container w3-light-grey w3-padding-16">
-              <h3>Publish message on '{{selected_channel}}' channel</h3>
-            </header>
+    <div class="w3-col l8" ng-controller="messageCtrl">
+      <div class="w3-card-2 w3-margin">
+        <header class="w3-container w3-light-grey w3-padding-16">
+          <h3>Publish message on '{{selected_channel}}' channel</h3>
+        </header>
 
-              <form class="w3-container">
-                <input class="w3-input" type="text" ng-model="msg.title" required>
-                <label class="w3-label w3-validate">Message title</label>
+        <form class="w3-container">
+          <input class="w3-input" type="text" ng-model="msg.title" required>
+          <label class="w3-label w3-validate">Message title</label>
 
-                <textarea class="w3-input" type="text" ng-model="msg.body" rows="4" required></textarea>
-                <label class="w3-label w3-validate">Message body</label>
-              </form>
+          <textarea class="w3-input" type="text" ng-model="msg.body" rows="4" required></textarea>
+          <label class="w3-label w3-validate">Message body</label>
+        </form>
 
-              <div class="w3-container w3-light-grey w3-padding-16">
-                  <div class="w3-row w3-margin-top">
-                    <div class="w3-col s10">
-                      <input class="w3-check" type="checkbox" ng-model="msg.survey" checked="checked" >
-                      <label class="w3-validate">It is a survey</label>
-                    </div>
-                    <div class="w3-col s2">
-                      <button ng-click="publishMessage(msg)" class="w3-btn w3-green">PUBLISH</button>
-                    </div>
-                  </div>
-                </div>
-
+        <div class="w3-container w3-light-grey w3-padding-16">
+          <div class="w3-row w3-margin-top">
+            <div class="w3-col s10">
+              <input class="w3-check" type="checkbox" ng-model="msg.survey" checked="checked" >
+              <label class="w3-validate">It is a survey</label>
+            </div>
+            <div class="w3-col s2">
+              <button ng-click="publishMessage(msg)" class="w3-btn w3-green">PUBLISH</button>
+            </div>
           </div>
         </div>
-        <div class="w3-row w3-grey w3-margin-top w3-margin-bottom">
-        <div class="w3-col s5">
-              <span class="w3-tag w3-round s6 w3-brown w3-border w3-border-white" ng-init="fileterBySurvey = undefined;" ng-click="fileterBySurvey = undefined"><i class="fa fa-filter" aria-hidden="true"></i>
-                      Filter messages
-              </span>
-          </div>
-          <div class="w3-col s3">
-            <span class="w3-tag w3-round w3-green w3-border w3-border-white w3-right" ng-click="fileterBySurvey = true">
-            <i class="fa fa-filter" aria-hidden="true"></i>
-                      Survey
+      </div>
+
+
+      <div class="w3-row w3-grey w3-margin">
+        <div class="w3-col l5">
+            <span class="w3-tag w3-round l6 w3-brown w3-border w3-border-white" ng-init="fileterBySurvey = undefined;" ng-click="fileterBySurvey = undefined"><i class="fa fa-filter" aria-hidden="true"></i>
+                    Filter messages
             </span>
-          </div>
-          <div class="w3-col s4">
-              <span class="w3-tag w3-round s6 w3-yellow w3-border w3-border-white w3-left" ng-click="fileterBySurvey = false">
-                <i class="fa fa-filter" aria-hidden="true"></i>
-                      Normal
-              </span>
-          </div>
         </div>
-        <div class="w3-row">
+        <div class="w3-col l3">
+          <span class="w3-tag w3-round w3-green w3-border w3-border-white w3-right" ng-click="fileterBySurvey = true">
+          <i class="fa fa-filter" aria-hidden="true"></i>
+                    Survey
+          </span>
+        </div>
+        <div class="w3-col l4">
+            <span class="w3-tag w3-round l6 w3-yellow w3-border w3-border-white w3-left" ng-click="fileterBySurvey = false">
+              <i class="fa fa-filter" aria-hidden="true"></i>
+                    Normal
+            </span>
+        </div>
+      </div>
+
+      <div class="w3-row w3-margin">
           <div class="w3-card-2">
             <div ng-repeat="m in messageArray.slice().reverse() | filter:{survey : fileterBySurvey}" class="w3-padding-4">
                 <div ng-if="m.survey==true" class="w3-card-4 w3-leftbar w3-border-green">
@@ -265,18 +264,18 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
                     </div>
                     <footer class="w3-container">
                       <div class="w3-row">
-                        <div class="w3-col s8 w3-left">
-                        <div class="w3-tag w3-round w3-brown" style="padding:3px">
-                        <div class="w3-tag w3-round w3-brown w3-border w3-border-white w3-btn w3-tiny" ng-click="httpPostData(selected_channel, m);">
-                          Publish again
+                        <div class="w3-col l8 w3-left">
+                          <div class="w3-tag w3-round w3-brown" style="padding:3px">
+                            <div class="w3-tag w3-round w3-brown w3-border w3-border-white w3-btn w3-tiny" ng-click="httpPostData(selected_channel, m);">
+                              Publish again
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                        <div class="w3-col l2">
+                          Yes&nbsp;<span class="w3-tag w3-btn w3-green">{{m.yesCount}}</span>
                         </div>
-                        <div class="w3-col s2">
-                          Yes&nbsp;<span class="w3-tag w3-btn w3-green">{{m.yesCount}}
-                        </div>
-                        <div class="w3-col s2">
-                          No&nbsp;<span class="w3-tag w3-btn w3-red">{{m.noCount}}
+                        <div class="w3-col l2">
+                          No&nbsp;<span class="w3-tag w3-btn w3-red">{{m.noCount}}</span>
                         </div>
                       </div>
                     </footer>
@@ -297,9 +296,7 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
                       </div>
                     </footer>
                 </div>
-
             </div>
-
           </div>
         </div>
 
