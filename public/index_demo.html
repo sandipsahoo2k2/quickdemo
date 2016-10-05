@@ -74,8 +74,8 @@ app.controller("channelCtrl", function($scope, $rootScope) {
             var msgObj = snapshot.val().message;
             msgObj.message_uri = messageURI + "/" + snapshot.key + '/message';
             console.log("The " + snapshot.key + " publishMessage is " + msgObj);
-            $rootScope.messageArray.push(msgObj);
-            $rootScope.message_keys.push(snapshot.key);
+            $rootScope.messageArray.unshift(msgObj);
+            $rootScope.message_keys.unshift(snapshot.key);
           });
 
           messageRef.orderByChild("message").on("child_changed", function(childSnapshot, prevChildKey) {
@@ -100,6 +100,8 @@ app.controller("channelCtrl", function($scope, $rootScope) {
 
 app.controller("messageCtrl", function($scope, $rootScope, $http) {
 
+      $scope.published = false;
+
       $scope.publishMessage = function(msg) {
 
         if(!$rootScope.selected_channel)
@@ -110,6 +112,7 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
 
         $scope.errortext = "";
         if (!msg) {return;}
+
         var msgKey = $scope.addMessageDetails(msg);
         $scope.msg.message_uri = messageURI + "/" + msgKey + '/message';
         $scope.httpPostData($rootScope.selected_channel, msg);
@@ -253,7 +256,7 @@ app.controller("messageCtrl", function($scope, $rootScope, $http) {
 
       <div class="w3-row w3-margin">
           <div class="w3-card-2">
-            <div ng-repeat="m in messageArray.slice().reverse() | filter:{survey : fileterBySurvey}" class="w3-padding-4">
+            <div ng-repeat="m in messageArray | filter:{survey : fileterBySurvey}" class="w3-padding-4">
                 <div ng-if="m.survey==true" class="w3-card-4 w3-leftbar w3-border-green">
                     <header class="w3-container w3-pale-green">
                       <h4>{{m.title}}</h4>
