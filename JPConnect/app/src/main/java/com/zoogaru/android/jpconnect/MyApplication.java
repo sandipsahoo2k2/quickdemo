@@ -2,8 +2,6 @@ package com.zoogaru.android.jpconnect;
 
 import android.support.multidex.MultiDex;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * Created by sandeep on 9/24/16.
  */
@@ -13,7 +11,6 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
             .getSimpleName();
 
     private static MyApplication mInstance;
-    public AtomicInteger m_msgId = new AtomicInteger();
     GlobalUtil t = null;
 
     @Override

@@ -139,12 +139,12 @@ public class MyFirebaseMessagingListener extends FirebaseMessagingService {
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_stat_jp)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-                .setColor(Color.parseColor(QKConstants.COLOR_PRIMARY))
+                .setColor(Color.parseColor(QKConstants.COLOR_JPMORGAN))
                 .setContentIntent(notificationIntent).setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(message));
 

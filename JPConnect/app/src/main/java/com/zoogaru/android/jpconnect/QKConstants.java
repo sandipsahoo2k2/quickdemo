@@ -32,6 +32,7 @@ public final class QKConstants {
     public final static String APP_PURPLE_COLOR = "#7844FF" ;
     public final static String LIGHT_GREEN_COLOR = "#98FB98" ;
     public final static String COLOR_PRIMARY = "#3F51B5" ;
+    public final static String COLOR_JPMORGAN = "#633517";
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     public static final int SPLASH_SCREEN_CODE = 1000;
